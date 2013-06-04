@@ -11,21 +11,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
-import com.tactilapp.operadorapp.OperadorappApplication;
 import com.tactilapp.operadorapp.R;
 import com.tactilapp.operadorapp.actividad.AbstractActivity;
 import com.tactilapp.operadorapp.actividad.paso1.Paso1Activity;
-import com.tactilapp.operadorapp.modelo.Companhia;
 
-public class Paso3Activity extends AbstractActivity {
+public class Paso3Activity
+		extends AbstractActivity {
 
 	private TextView textoDeLaCompanhia;
 
 	private String numero;
 	private String nombreDeLaCompanhia;
-	private Companhia companhia;
-
-	private OperadorappApplication contenedor;
+	private String colorSuperior;
+	private String colorInferior;
 
 	@Override
 	protected int obtenerVista() {
@@ -35,59 +33,34 @@ public class Paso3Activity extends AbstractActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		contenedor = (OperadorappApplication) getApplication();
 
 		numero = getIntent().getStringExtra("numero");
 		nombreDeLaCompanhia = getIntent().getStringExtra("companhia");
+		colorSuperior = getIntent().getStringExtra("colorSuperior");
+		colorInferior = getIntent().getStringExtra("colorInferior");
 
 		textoDeLaCompanhia = (TextView) findViewById(R.id.companhia);
 		textoDeLaCompanhia.setText(nombreDeLaCompanhia);
 
-		companhia = contenedor.obtenerLaCompanhia(nombreDeLaCompanhia);
-		if (companhia != null) {
-			final Map<String, String> nombreCompanhia = new HashMap<String, String>();
-			nombreCompanhia.put("nombre", companhia.getNombre());
-			FlurryAgent.logEvent("Compañía cargada", nombreCompanhia, true);
-			
-			final GradientDrawable degradado = new GradientDrawable(
-					GradientDrawable.Orientation.TOP_BOTTOM,
-					new int[] { obtenerElColorSuperior(),
-							obtenerElColorInferior() });
-			degradado.setCornerRadius(0f);
-			textoDeLaCompanhia.setBackgroundDrawable(degradado);
-		}
+		final Map<String, String> nombreCompanhia =
+				new HashMap<String, String>();
+		nombreCompanhia.put("nombre", nombreDeLaCompanhia);
+		FlurryAgent.logEvent("Compañía cargada", nombreCompanhia, true);
+
+		final GradientDrawable degradado =
+				new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+						new int[]{ obtenerElColorSuperior(),
+								obtenerElColorInferior() });
+		degradado.setCornerRadius(0f);
+		textoDeLaCompanhia.setBackgroundDrawable(degradado);
 	}
 
 	private int obtenerElColorSuperior() {
-		Integer colorSuperior = null;
-		if (companhia.tieneColorSuperior()) {
-			colorSuperior = (int) (Long.parseLong(
-					"FF" + companhia.getColorSuperior(), 16));
-		} else if (companhia.tieneColorInferior()) {
-			colorSuperior = (int) (Long.parseLong(
-					"FF" + companhia.getColorInferior(), 16));
-		} else {
-			colorSuperior = (int) (Long.parseLong("FF"
-					+ contenedor.obtenerLaCompanhiaPorDefecto()
-							.getColorSuperior(), 16));
-		}
-		return colorSuperior;
+		return (int) Long.parseLong("FF" + colorSuperior.substring(1), 16);
 	}
 
 	private int obtenerElColorInferior() {
-		Integer colorInferior = null;
-		if (companhia.tieneColorInferior()) {
-			colorInferior = (int) (Long.parseLong(
-					"FF" + companhia.getColorInferior(), 16));
-		} else if (companhia.tieneColorSuperior()) {
-			colorInferior = (int) (Long.parseLong(
-					"FF" + companhia.getColorSuperior(), 16));
-		} else {
-			colorInferior = (int) (Long.parseLong("FF"
-					+ contenedor.obtenerLaCompanhiaPorDefecto()
-							.getColorInferior(), 16));
-		}
-		return colorInferior;
+		return (int) Long.parseLong("FF" + colorInferior.substring(1), 16);
 	}
 
 	public void irAlPaso1(final View view) {

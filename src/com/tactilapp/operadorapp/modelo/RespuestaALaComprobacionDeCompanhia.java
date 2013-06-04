@@ -5,7 +5,8 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RespuestaALaComprobacionDeCompanhia implements Serializable {
+public class RespuestaALaComprobacionDeCompanhia
+		implements Serializable {
 
 	private static final long serialVersionUID = -4426226846600818154L;
 
@@ -38,6 +39,20 @@ public class RespuestaALaComprobacionDeCompanhia implements Serializable {
 			return resultado.companhia;
 		}
 		return "";
+	}
+
+	public String obtenerElColorSuperior() {
+		if (hayResultado()) {
+			return resultado.colorSuperior;
+		}
+		return "#868382";
+	}
+
+	public String obtenerElColorInferior() {
+		if (hayResultado()) {
+			return resultado.colorInferior;
+		}
+		return "#d0cccb";
 	}
 
 	public String obtenerElMensajeDeError() {

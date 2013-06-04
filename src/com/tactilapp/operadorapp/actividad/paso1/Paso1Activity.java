@@ -41,7 +41,7 @@ public class Paso1Activity extends AbstractActivity {
 
 	public void irAlPaso2(final View view) {
 		if (Utils.haMetidoAlgoValidoEnElCampo(this, numeroDeTelefono, 8,
-				R.string.error_numero_corto, R.string.error_numero_vacio)
+				R.string.errorNumeroCorto, R.string.errorNumeroVacio)
 				&& Utils.hayConexionAInternet(this)) {
 			final Intent intent = new Intent(this, Paso2Activity.class);
 			intent.putExtra("numero", numeroDeTelefono.getText().toString()
