@@ -12,20 +12,7 @@ A continuación se explican los pasos que necesitas para probar la aplicación e
 Clonado
 -------
 	git clone git@github.com:TactilApp/OperadorApp_android.git
-
-Submódulos
----------
-La aplicación utiliza la relación entre cadenas de la CMT y operadoras proporcionado por el módulo OperadorApp-Companies (https://github.com/TactilApp/OperadorApp-Companies), para enlazarlo:
-
-	git submodule init
-	git submodule update
 	
-y después se mueve el fichero necesario de este módulo (companias/companies-color.plist) a la carpeta de XMLs de la aplicación (res/xml), cambiándole el guión medio por guión bajo para evitar el problema de nomenclatura en Android:
-
-	mv "companias/companies-color.plist" "res/xml/companies_color.plist"
-	
-Ahora, si quieres, se puede eliminar la carpeta "companias" donde se ha descargado el módulo.
-
 Configuración
 -------------
 Por último, la aplicación emplea UrbanAirship para notificaciones, Flurry para estadísticas y Admob para publicidad.
