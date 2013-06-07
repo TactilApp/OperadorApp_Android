@@ -204,7 +204,7 @@ public class Paso2Activity
 					protected Void doInBackground(final Void... params) {
 						try {
 							if (Utils.hayConexionAInternet(actividad, null)) {
-								hayConexion = true;
+							hayConexion = true;
 								final String informacionAEnviar =
 										"apiv="
 												+ respuesta.version
@@ -213,7 +213,7 @@ public class Paso2Activity
 												+ "&captcha_str="
 												+ textoDelCaptcha.getText()
 														.toString()
-												+ "&platform=testing";
+												+ "&platform=android";
 								respuestaALaComprobacionDelCaptcha =
 										EnvioDePostParaComprobarLaCompanhia
 												.enviar(respuesta,
