@@ -55,7 +55,7 @@ public class Utils {
 			final String cadenaIntroducida = campo.getText().toString();
 
 			haMetidoAlgoConMasCaracteresDelMinimo = haMetidoMasCaracteresDelMinimo(
-					cadenaIntroducida, 8);
+					cadenaIntroducida, numeroMinimoDeCaracteres);
 
 			if (!haMetidoAlgoConMasCaracteresDelMinimo) {
 				campo.startAnimation(AnimationUtils.loadAnimation(contexto,
