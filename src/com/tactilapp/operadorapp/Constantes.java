@@ -8,6 +8,5 @@ public class Constantes {
 	
 	public static final String URL_OPERADORAPP =
 			"http://operadorapp.com/api/v2/";
-	public static final boolean DEBUG = true;
 	public static final Integer TIEMPO_SPLASH = 3000;
 }

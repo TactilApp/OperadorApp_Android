@@ -1,5 +1,11 @@
 package com.tactilapp.operadorapp.actividad.paso2;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,8 +32,7 @@ import com.tactilapp.operadorapp.modelo.RespuestaALaComprobacionDeCompanhia;
 import com.tactilapp.operadorapp.modelo.RespuestaALaPeticionDeCaptcha;
 import com.tactilapp.operadorapp.post.EnvioDePostParaComprobarLaCompanhia;
 
-public class Paso2Activity
-		extends AbstractActivity {
+public class Paso2Activity extends AbstractActivity {
 
 	private Activity actividad;
 
@@ -54,14 +59,12 @@ public class Paso2Activity
 		numero = getIntent().getStringExtra("numero");
 
 		textoDelCaptcha = (EditText) findViewById(R.id.texto_captcha);
-		imagenDelCaptcha =
-				(ImagenDeAnchuraCompleta) findViewById(R.id.imagen_captcha);
+		imagenDelCaptcha = (ImagenDeAnchuraCompleta) findViewById(R.id.imagen_captcha);
 
-		imagenDefectoDelCaptcha =
-				BitmapFactory.decodeResource(getResources(),
-						R.drawable.cargando_captcha);
-		gestorAsincronoDeImagenes =
-				new GestorAsincronoDeImagenes(imagenDefectoDelCaptcha);
+		imagenDefectoDelCaptcha = BitmapFactory.decodeResource(getResources(),
+				R.drawable.cargando_captcha);
+		gestorAsincronoDeImagenes = new GestorAsincronoDeImagenes(
+				imagenDefectoDelCaptcha);
 
 		gestorAsincronoDeImagenes
 				.fijarAlTerminarListener(new AlTerminarListener() {
@@ -85,51 +88,49 @@ public class Paso2Activity
 	}
 
 	private void generarLaTareaParaObtenerElCaptcha() {
-		final CargadorAsincronoDeDatos cargador =
-				new CargadorAsincronoDeDatos(this) {
+		final CargadorAsincronoDeDatos cargador = new CargadorAsincronoDeDatos(
+				this) {
 
-					private Boolean hayConexion = false;
+			private Boolean hayConexion = false;
 
-					@Override
-					protected int obtenerTituloDeLaBarraDeProgreso() {
-						return R.string.paso2_titulo;
+			@Override
+			protected int obtenerTituloDeLaBarraDeProgreso() {
+				return R.string.paso2_titulo;
+			}
+
+			@Override
+			protected String obtenerMensajeDeLaBarraDeProgreso() {
+				return actividad.getResources().getString(
+						R.string.paso2_mensaje_cargando);
+			}
+
+			@Override
+			protected Void doInBackground(final Void... params) {
+				try {
+					if (Utils.hayConexionAInternet(actividad, null)) {
+						hayConexion = true;
+						respuesta = LectorDesdeJSONDeLaDireccionDelCaptcha
+								.cargar(Constantes.URL_OPERADORAPP);
+					} else {
+						hayConexion = false;
+						respuesta = null;
 					}
+				} catch (final Exception excepcion) {
+					respuesta = null;
+				}
+				return null;
+			}
 
-					@Override
-					protected String obtenerMensajeDeLaBarraDeProgreso() {
-						return actividad.getResources().getString(
-								R.string.paso2_mensaje_cargando);
-					}
-
-					@Override
-					protected Void doInBackground(final Void... params) {
-						try {
-							if (Utils.hayConexionAInternet(actividad, null)) {
-								hayConexion = true;
-								respuesta =
-										LectorDesdeJSONDeLaDireccionDelCaptcha
-												.cargar(Constantes.URL_OPERADORAPP);
-							} else {
-								hayConexion = false;
-								respuesta = null;
-							}
-						} catch (final Exception excepcion) {
-							respuesta = null;
-						}
-						return null;
-					}
-
-					@Override
-					protected void tareasTrasObtenerRespuesta() {
-						if (Boolean.TRUE.equals(hayConexion)
-								&& respuesta != null) {
-							cargarLaImagenDelCaptcha();
-						} else {
-							imagenDelCaptcha.setVisibility(View.GONE);
-							mostrarAvisoDeErrorAlRecibirRespuesta(obtenerTituloDeLaBarraDeProgreso());
-						}
-					}
-				};
+			@Override
+			protected void tareasTrasObtenerRespuesta() {
+				if (Boolean.TRUE.equals(hayConexion) && respuesta != null) {
+					cargarLaImagenDelCaptcha();
+				} else {
+					imagenDelCaptcha.setVisibility(View.GONE);
+					mostrarAvisoDeErrorAlRecibirRespuesta(obtenerTituloDeLaBarraDeProgreso());
+				}
+			}
+		};
 
 		cargador.execute();
 	}
@@ -182,65 +183,65 @@ public class Paso2Activity
 		}
 	}
 
-
 	private void comprobarElNumero() {
-		final CargadorAsincronoDeDatos cargador =
-				new CargadorAsincronoDeDatos(this) {
-					private RespuestaALaComprobacionDeCompanhia respuestaALaComprobacionDelCaptcha;
-					private Boolean hayConexion = false;
+		final CargadorAsincronoDeDatos cargador = new CargadorAsincronoDeDatos(
+				this) {
+			private RespuestaALaComprobacionDeCompanhia respuestaALaComprobacionDelCaptcha;
+			private Boolean hayConexion = false;
 
-					@Override
-					protected int obtenerTituloDeLaBarraDeProgreso() {
-						return R.string.paso2_titulo;
+			@Override
+			protected int obtenerTituloDeLaBarraDeProgreso() {
+				return R.string.paso2_titulo;
+			}
+
+			@Override
+			protected String obtenerMensajeDeLaBarraDeProgreso() {
+				return actividad.getResources().getString(
+						R.string.paso2_mensaje_comprobando);
+			}
+
+			@Override
+			protected Void doInBackground(final Void... params) {
+				try {
+					if (Utils.hayConexionAInternet(actividad, null)) {
+						hayConexion = true;
+
+						final List<NameValuePair> informacionAEnviar = new ArrayList<NameValuePair>();
+						informacionAEnviar.add(new BasicNameValuePair("apiv",
+								respuesta.version));
+						informacionAEnviar.add(new BasicNameValuePair(
+								"telephone", numero.trim()));
+						informacionAEnviar.add(new BasicNameValuePair(
+								"captcha_str", textoDelCaptcha.getText()
+										.toString().trim()));
+						informacionAEnviar.add(new BasicNameValuePair(
+								"platform", "android"));
+
+						respuestaALaComprobacionDelCaptcha = EnvioDePostParaComprobarLaCompanhia
+								.enviar(respuesta, informacionAEnviar);
+					} else {
+						hayConexion = false;
+						respuestaALaComprobacionDelCaptcha = null;
 					}
+				} catch (final Exception excepcion) {
+					respuestaALaComprobacionDelCaptcha = null;
+				}
+				return null;
+			}
 
-					@Override
-					protected String obtenerMensajeDeLaBarraDeProgreso() {
-						return actividad.getResources().getString(
-								R.string.paso2_mensaje_comprobando);
-					}
+			@Override
+			protected void tareasTrasObtenerRespuesta() {
+				if (Boolean.TRUE.equals(hayConexion)
+						&& respuestaALaComprobacionDelCaptcha != null) {
+					tareasTrasObtenerRespuestaConConexion(respuestaALaComprobacionDelCaptcha);
+				} else {
+					mostrarAvisoDeErrorAlRecibirRespuesta(
+							obtenerTituloDeLaBarraDeProgreso(),
+							R.string.paso2_mensaje_sin_respuesta);
+				}
 
-					@Override
-					protected Void doInBackground(final Void... params) {
-						try {
-							if (Utils.hayConexionAInternet(actividad, null)) {
-							hayConexion = true;
-								final String informacionAEnviar =
-										"apiv="
-												+ respuesta.version
-												+ "&telephone="
-												+ numero
-												+ "&captcha_str="
-												+ textoDelCaptcha.getText()
-														.toString()
-												+ "&platform=android";
-								respuestaALaComprobacionDelCaptcha =
-										EnvioDePostParaComprobarLaCompanhia
-												.enviar(respuesta,
-														informacionAEnviar);
-							} else {
-								hayConexion = false;
-								respuestaALaComprobacionDelCaptcha = null;
-							}
-						} catch (final Exception excepcion) {
-							respuestaALaComprobacionDelCaptcha = null;
-						}
-						return null;
-					}
-
-					@Override
-					protected void tareasTrasObtenerRespuesta() {
-						if (Boolean.TRUE.equals(hayConexion)
-								&& respuestaALaComprobacionDelCaptcha != null) {
-							tareasTrasObtenerRespuestaConConexion(respuestaALaComprobacionDelCaptcha);
-						} else {
-							mostrarAvisoDeErrorAlRecibirRespuesta(
-									obtenerTituloDeLaBarraDeProgreso(),
-									R.string.paso2_mensaje_sin_respuesta);
-						}
-
-					}
-				};
+			}
+		};
 
 		cargador.execute();
 	}

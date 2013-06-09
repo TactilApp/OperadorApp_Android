@@ -1,13 +1,19 @@
 package com.tactilapp.operadorapp.post;
 
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.tactilapp.operadorapp.Utils;
 
 public abstract class AbstractEnvioDePost<E> {
 
@@ -23,51 +29,35 @@ public abstract class AbstractEnvioDePost<E> {
 
 	@SuppressWarnings("unchecked")
 	protected E enviarPeticion(final String cookie,
-			final String informacionAEnviar) {
+			final List<NameValuePair> informacionAEnviar) {
 		return (E) new Gson().fromJson(
 				generarPeticion(cookie, informacionAEnviar),
 				obtenerClaseAGenerar());
 	}
 
 	protected String generarPeticion(final String cookie,
-			final String informacionAEnviar) {
-		URL urlALaQueConectar;
-		HttpURLConnection conexion;
-
-		Scanner entrada = null;
+			final List<NameValuePair> informacionAEnviar) {
+		final DefaultHttpClient cliente = new DefaultHttpClient();
 		try {
-			urlALaQueConectar = new URL(url);
+			final HttpPost peticion = new HttpPost(url);
+			peticion.setEntity(new UrlEncodedFormEntity(informacionAEnviar,
+					HTTP.UTF_8));
+			peticion.setHeader("Cookie", cookie);
 
-			conexion = (HttpURLConnection) urlALaQueConectar.openConnection();
-			conexion.setDoOutput(true);
-			conexion.setRequestMethod("POST");
-			conexion.setFixedLengthStreamingMode(informacionAEnviar.getBytes().length);
-			if (cookie != null && !"".equals(cookie)) {
-				conexion.addRequestProperty("Cookie", cookie);
+			final HttpResponse respuesta = cliente.execute(peticion);
+			final HttpEntity contenidoDeLaRespuesta = respuesta.getEntity();
+
+			if (contenidoDeLaRespuesta != null) {
+				return Utils.obtenerElContenido(contenidoDeLaRespuesta);
 			}
-
-			final PrintWriter salida = new PrintWriter(
-					conexion.getOutputStream());
-			salida.print(informacionAEnviar);
-			salida.close();
-
-			String respuesta = "";
-			entrada = new Scanner(conexion.getInputStream());
-			while (entrada.hasNextLine()) {
-				respuesta += (entrada.nextLine());
-			}
-
-			entrada.close();
-			return respuesta;
 		} catch (final Exception excepcion) {
 			Log.e(getClass().getSimpleName(), "Error para la URL " + url,
 					excepcion);
 		} finally {
-			if (entrada != null) {
-				entrada.close();
+			if (cliente != null) {
+				cliente.getConnectionManager().shutdown();
 			}
 		}
 		return null;
 	}
-
 }

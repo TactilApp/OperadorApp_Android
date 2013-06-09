@@ -1,11 +1,16 @@
 package com.tactilapp.operadorapp.post;
 
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+
 import android.util.Log;
 
-import com.tactilapp.operadorapp.modelo.RespuestaALaPeticionDeCaptcha;
 import com.tactilapp.operadorapp.modelo.RespuestaALaComprobacionDeCompanhia;
+import com.tactilapp.operadorapp.modelo.RespuestaALaPeticionDeCaptcha;
 
-public class EnvioDePostParaComprobarLaCompanhia extends AbstractEnvioDePost<RespuestaALaComprobacionDeCompanhia> {
+public class EnvioDePostParaComprobarLaCompanhia extends
+		AbstractEnvioDePost<RespuestaALaComprobacionDeCompanhia> {
 
 	protected String url;
 
@@ -13,13 +18,15 @@ public class EnvioDePostParaComprobarLaCompanhia extends AbstractEnvioDePost<Res
 		super(url);
 	}
 
-	public static RespuestaALaComprobacionDeCompanhia enviar(final RespuestaALaPeticionDeCaptcha datosDeEntrada,
-			final String informacionAEnviar) throws Exception {
+	public static RespuestaALaComprobacionDeCompanhia enviar(
+			final RespuestaALaPeticionDeCaptcha datosDeEntrada,
+			final List<NameValuePair> informacionAEnviar) throws Exception {
 
 		try {
-			final EnvioDePostParaComprobarLaCompanhia lector = new EnvioDePostParaComprobarLaCompanhia(datosDeEntrada.urlFinal);
-			final RespuestaALaComprobacionDeCompanhia respuesta = lector.enviarPeticion(
-					datosDeEntrada.cookie, informacionAEnviar);
+			final EnvioDePostParaComprobarLaCompanhia lector = new EnvioDePostParaComprobarLaCompanhia(
+					datosDeEntrada.urlFinal);
+			final RespuestaALaComprobacionDeCompanhia respuesta = lector
+					.enviarPeticion(datosDeEntrada.cookie, informacionAEnviar);
 			return respuesta;
 		} catch (final Exception excepcion) {
 			Log.d("EnvioDePost", "ERROR con el envío de la petición POST",

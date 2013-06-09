@@ -1,6 +1,9 @@
 package com.tactilapp.operadorapp;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.http.AndroidHttpClient;
+import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -115,6 +119,36 @@ public class Utils {
 			}
 		}
 		return null;
+	}
+
+	public static String obtenerElContenido(
+			final HttpEntity contenidoDeLaRespuesta) {
+		BufferedReader lector = null;
+		final StringBuilder contenido = new StringBuilder();
+
+		try {
+
+			lector = new BufferedReader(new InputStreamReader(
+					contenidoDeLaRespuesta.getContent()));
+			String linea;
+			while ((linea = lector.readLine()) != null) {
+				contenido.append(linea);
+			}
+
+		} catch (final IOException excepcion) {
+			Log.e("Utils",
+					"Error para obtener el contenido de la entidad de respuesta ",
+					excepcion);
+		} finally {
+			if (lector != null) {
+				try {
+					lector.close();
+				} catch (final IOException excepcion) {
+					excepcion.printStackTrace();
+				}
+			}
+		}
+		return contenido.toString();
 	}
 
 }
