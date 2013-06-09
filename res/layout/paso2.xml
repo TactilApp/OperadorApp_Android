@@ -26,6 +26,17 @@
         android:contentDescription="@string/imagen"
         android:src="@drawable/insertar_captcha" />
 
+    <com.tactilapp.operadorapp.componente.ImagenDeAnchuraCompleta
+        android:id="@+id/imagen_captcha"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dip"
+        android:layout_marginTop="10dip"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/imagen"
+        android:src="@drawable/cargando_captcha" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -57,17 +68,6 @@
             android:inputType="textNoSuggestions"
             android:padding="10dip" />
     </LinearLayout>
-
-    <com.tactilapp.operadorapp.componente.ImagenDeAnchuraCompleta
-        android:id="@+id/imagen_captcha"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip"
-        android:layout_marginTop="10dip"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/imagen"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/cargando_captcha" />
 
     <com.tactilapp.operadorapp.componente.ImagenDeAnchuraCompleta
         android:layout_width="fill_parent"
