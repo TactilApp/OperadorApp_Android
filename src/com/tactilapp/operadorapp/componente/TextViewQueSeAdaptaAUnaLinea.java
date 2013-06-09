@@ -1,15 +1,13 @@
 package com.tactilapp.operadorapp.componente;
 
 import android.content.Context;
-import android.graphics.Paint;
+import android.text.Layout;
+import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
 
-public class TextViewQueSeAdaptaAUnaLinea
-		extends TextView {
-
-	private Paint dibujo;
+public class TextViewQueSeAdaptaAUnaLinea extends TextView {
 
 	public TextViewQueSeAdaptaAUnaLinea(final Context contexto) {
 		super(contexto);
@@ -22,66 +20,36 @@ public class TextViewQueSeAdaptaAUnaLinea
 		inicializar();
 	}
 
+	public TextViewQueSeAdaptaAUnaLinea(final Context contexto,
+			AttributeSet atributos, int defStyle) {
+		super(contexto, atributos, defStyle);
+		inicializar();
+	}
+
 	private void inicializar() {
-		dibujo = new Paint();
-		dibujo.set(getPaint());
+		setSingleLine();
+		setEllipsize(TruncateAt.END);
 	}
 
 	@Override
-	protected void onMeasure(final int widthMeasureSpec,
-			final int heightMeasureSpec) {
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-		final int anchura = MeasureSpec.getSize(widthMeasureSpec);
-		final int altura = getMeasuredHeight();
+		final Layout layout = getLayout();
+		if (layout != null) {
+			final int numeroDeLineas = layout.getLineCount();
+			if (numeroDeLineas > 0) {
+				final int numeroDeCaracteresFueraDeLaAnchura = layout
+						.getEllipsisCount(numeroDeLineas - 1);
+				if (numeroDeCaracteresFueraDeLaAnchura > 0) {
+					final float tamanhoDelTexto = getTextSize();
+					setTextSize(TypedValue.COMPLEX_UNIT_PX, (tamanhoDelTexto - 10));
 
-		ajustarElTextoALaAnchura(getText().toString(), anchura);
-
-		setMeasuredDimension(anchura, altura);
-	}
-
-	@Override
-	protected void onTextChanged(final CharSequence text, final int start,
-			final int before, final int after) {
-		ajustarElTextoALaAnchura(text.toString(), getWidth());
-	}
-
-	@Override
-	protected void onSizeChanged(final int w, final int h, final int oldw,
-			final int oldh) {
-		if (w != oldw) {
-			ajustarElTextoALaAnchura(getText().toString(), w);
-		}
-	}
-
-	private void ajustarElTextoALaAnchura(final String texto, final int anchura) {
-		if (anchura <= 0) {
-			return;
-		}
-
-		final int anchuraMaximaDelTexto =
-				anchura - getPaddingLeft() - getPaddingRight();
-
-		float maximo = 100;
-		float minimo = 2;
-		final float umbral = 0.5f;
-
-		dibujo.set(getPaint());
-
-		while (maximo - minimo > umbral) {
-			final float tamanho = (maximo + minimo) / 2;
-			dibujo.setTextSize(tamanho);
-
-			if (dibujo.measureText(texto) >= anchuraMaximaDelTexto) {
-				// Muy grande
-				maximo = tamanho;
-			} else {
-				// Muy pequeño
-				minimo = tamanho;
+					super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+				}
 			}
 		}
-		// Usamos el menor ante la duda
-		this.setTextSize(TypedValue.COMPLEX_UNIT_PX, minimo);
 	}
+
 
 }

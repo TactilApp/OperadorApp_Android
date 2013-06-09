@@ -25,7 +25,7 @@
         android:gravity="center"
         android:padding="10dip"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="30sp" />
 
     <com.tactilapp.operadorapp.componente.ImagenDeAnchuraCompleta
         android:layout_width="fill_parent"
