@@ -31,7 +31,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/pie"
-        android:layout_below="@id/cabecera" >
+        android:layout_below="@id/cabecera"
+        android:overScrollMode="never" >
 
         <LinearLayout
             android:id="@+id/panel"
