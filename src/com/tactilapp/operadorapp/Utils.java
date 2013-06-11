@@ -22,6 +22,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.tactilapp.operadorapp.iabilling.Purchase;
+
 public class Utils {
 
 	public static boolean hayConexionAInternet(final Context contexto) {
@@ -155,6 +157,11 @@ public class Utils {
 	public static boolean elDispositivoPermiteLlamar(final Context context) {
 		return ((TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE)).getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
+	}
+
+	public static boolean comprobarSiLaCompraYaHaSidoRealizada(
+			final String payloadEsperado, final Purchase compra) {
+		return payloadEsperado.equals(compra.getDeveloperPayload());
 	}
 
 }

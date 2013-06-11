@@ -11,6 +11,9 @@
     <string name="splash_titulo">Operadorapp</string>
 
     <string name="paso1_titulo">Operadorapp</string>
+    <string name="paso1_compra_error">Se ha producido un error durante la compra: </string>
+    <string name="paso1_compra_error_autenticacion">Se ha producido un error con la autenticación durante la compra.</string>
+    <string name="paso1_compra_agenda_correcta">Enhorabuena! La compra se ha realizado con éxito. Ya puede disfrutar del acceso a la agenda de contactos.</string>
 
     <string name="paso2_titulo">Operadorapp</string>
     <string name="paso2_captcha">Código</string>
@@ -35,4 +38,7 @@
 
 	<string name="admob_unit_id">ejemplo</string>
 	<string name="flurry_id">ejemplo</string>
+	<string name="clave_ia_billing">ejemplo</string>
+	<string name="id_agenda_ia_billing">ejemplo</string>
+	<string name="payload_agenda_ia_billing">ejemplo</string>
 </resources>
