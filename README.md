@@ -25,6 +25,12 @@ Por último, la aplicación emplea UrbanAirship para notificaciones, Flurry para
 
 	- Admob
 	   Para configurarlo, hay que modificar en el fichero strings.xml la clave admob_unit_id. Mientras que esta valga "ejemplo" el sistema quedará desactivado.
+
+	- In-app Billing
+	   OperadorApp usa el sistema In-App Billing de android para realizar el pago para poder disfrutar del servicio de acceso a la agenda de contactos.
+	   Para configurarlo, hay que modificar en el fichero strings.xml la clave clave_ia_billing. Mientras que esta valga "ejemplo" el sistema quedará desactivado. 
+	   Además, desde la consola de Google developer se deberá crear el producto con un id, que se colocará en el fichero strings.xml en la clave id_agenda_ia_billing.
+	   Finalmente, se recomienda usar un payload para las compras, la palabra a usar deberá colocarse en el fichero strings.xml en la clave payload_agenda_ia_billing.
 	   
 Licencia
 --------
