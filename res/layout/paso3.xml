@@ -28,6 +28,7 @@
         android:textSize="30sp" />
 
     <com.tactilapp.operadorapp.componente.ImagenDeAnchuraCompleta
+        android:id="@+id/boton_llamar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

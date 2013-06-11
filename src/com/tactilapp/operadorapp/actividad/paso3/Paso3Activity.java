@@ -8,17 +8,19 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 import com.tactilapp.operadorapp.R;
+import com.tactilapp.operadorapp.Utils;
 import com.tactilapp.operadorapp.actividad.AbstractActivity;
 import com.tactilapp.operadorapp.actividad.paso1.Paso1Activity;
 
-public class Paso3Activity
-		extends AbstractActivity {
+public class Paso3Activity extends AbstractActivity {
 
 	private TextView textoDeLaCompanhia;
+	private ImageView botonParaLlamar;
 
 	private String numero;
 	private String nombreDeLaCompanhia;
@@ -39,18 +41,21 @@ public class Paso3Activity
 		colorSuperior = getIntent().getStringExtra("colorSuperior");
 		colorInferior = getIntent().getStringExtra("colorInferior");
 
+		botonParaLlamar = (ImageView) findViewById(R.id.boton_llamar);
+		if (!Utils.elDispositivoPermiteLlamar(this)) {
+			botonParaLlamar.setVisibility(View.GONE);
+		}
+
 		textoDeLaCompanhia = (TextView) findViewById(R.id.companhia);
 		textoDeLaCompanhia.setText(nombreDeLaCompanhia);
 
-		final Map<String, String> nombreCompanhia =
-				new HashMap<String, String>();
+		final Map<String, String> nombreCompanhia = new HashMap<String, String>();
 		nombreCompanhia.put("nombre", nombreDeLaCompanhia);
 		FlurryAgent.logEvent("Compañía cargada", nombreCompanhia, true);
 
-		final GradientDrawable degradado =
-				new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-						new int[]{ obtenerElColorSuperior(),
-								obtenerElColorInferior() });
+		final GradientDrawable degradado = new GradientDrawable(
+				GradientDrawable.Orientation.TOP_BOTTOM, new int[] {
+						obtenerElColorSuperior(), obtenerElColorInferior() });
 		degradado.setCornerRadius(0f);
 		textoDeLaCompanhia.setBackgroundDrawable(degradado);
 	}
@@ -72,9 +77,11 @@ public class Paso3Activity
 	}
 
 	public void irALlamar(final View view) {
-		final Uri numeroDeTelefono = Uri.parse("tel:" + numero);
-		startActivity(new Intent(Intent.ACTION_CALL, numeroDeTelefono));
-		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		if (Utils.elDispositivoPermiteLlamar(this)) {
+			final Uri numeroDeTelefono = Uri.parse("tel:" + numero);
+			startActivity(new Intent(Intent.ACTION_CALL, numeroDeTelefono));
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		}
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.http.AndroidHttpClient;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -149,6 +150,11 @@ public class Utils {
 			}
 		}
 		return contenido.toString();
+	}
+
+	public static boolean elDispositivoPermiteLlamar(final Context context) {
+		return ((TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE)).getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
 	}
 
 }
