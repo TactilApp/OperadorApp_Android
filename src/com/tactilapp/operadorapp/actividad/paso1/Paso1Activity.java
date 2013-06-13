@@ -70,9 +70,11 @@ public class Paso1Activity extends AbstractActivity {
 			final Intent data) {
 
 		if (compraDeLaAgenda.handleActivityResult(reqCode, resultCode, data)) {
-			Log.d(TAG, "Llegamos después de realizar la compra.");
-			FlurryAgent.logEvent("Compra de la agenda realizada", true);
-			mostrarLaAgenda();
+			if (compraDeLaAgenda.tieneAccesoALaAgenda()) {
+				Log.d(TAG, "Llegamos después de realizar la compra.");
+				FlurryAgent.logEvent("Compra de la agenda realizada", true);
+				mostrarLaAgenda();
+			}
 		} else {
 
 			super.onActivityResult(reqCode, resultCode, data);

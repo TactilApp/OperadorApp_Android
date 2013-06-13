@@ -41,7 +41,7 @@ public abstract class AbstractLectorDesdeJSON<E> {
 	protected String obtenerLaURLFinal() {
 		return urlFinal;
 	}
-	
+
 	protected String obtenerLaCookie() {
 		return cookie;
 	}
@@ -67,7 +67,8 @@ public abstract class AbstractLectorDesdeJSON<E> {
 			HttpResponse respuesta = cliente.execute(peticion);
 			int codigoDeEstado = respuesta.getStatusLine().getStatusCode();
 
-			if (codigoDeEstado == HttpStatus.SC_MOVED_PERMANENTLY) {
+			if (codigoDeEstado == HttpStatus.SC_MOVED_PERMANENTLY
+					|| codigoDeEstado == HttpStatus.SC_MOVED_TEMPORARILY) {
 				final Header cabecera = respuesta.getLastHeader("Location");
 				if (cabecera != null) {
 					peticion.abort();
@@ -78,14 +79,13 @@ public abstract class AbstractLectorDesdeJSON<E> {
 					codigoDeEstado = respuesta.getStatusLine().getStatusCode();
 				}
 			}
-			
+
 			if (codigoDeEstado != HttpStatus.SC_OK) {
 				Log.e(getClass().getSimpleName(), "Error " + codigoDeEstado
 						+ " para la URL " + url);
 				return null;
 			}
-			
-			
+
 			cookie = respuesta.getLastHeader("Set-Cookie").getValue();
 			final HttpEntity entidadDeLaRespuesta = respuesta.getEntity();
 			entrada = new BufferedReader(new InputStreamReader(

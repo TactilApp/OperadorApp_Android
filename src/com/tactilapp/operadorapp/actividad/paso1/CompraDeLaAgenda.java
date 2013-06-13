@@ -95,11 +95,13 @@ public class CompraDeLaAgenda implements Serializable {
 			if (resultado.isFailure()) {
 				tieneCompradoElAccesoALaAgenda = false;
 
-				Toast.makeText(
-						actividad,
-						actividad
-								.getString(R.string.paso1_compra_agenda_correcta)
-								+ resultado, Toast.LENGTH_LONG).show();
+				if (resultado.getResponse() != -1005) {
+					Toast.makeText(
+							actividad,
+							actividad.getString(R.string.paso1_compra_error)
+									+ " " + resultado.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
 				return;
 			} else if (!Utils.comprobarSiLaCompraYaHaSidoRealizada(
 					payloadDelServicioDeIABillingParaLaAgenda, compra)) {
